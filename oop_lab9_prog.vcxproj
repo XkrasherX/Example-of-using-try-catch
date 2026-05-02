@@ -119,11 +119,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CDeque.cpp" />
+    <ClCompile Include="CPolynom3.cpp" />
     <ClCompile Include="MyError.cpp" />
     <ClCompile Include="MyForm.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CDeque.h" />
+    <ClInclude Include="CPolynom3.h" />
     <ClInclude Include="MyError.h" />
     <ClInclude Include="MyForm.h">
       <FileType>CppForm</FileType>

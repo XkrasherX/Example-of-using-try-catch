@@ -24,6 +24,9 @@
     <ClCompile Include="MyError.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CPolynom3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MyForm.h">
@@ -33,6 +36,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MyError.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CPolynom3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

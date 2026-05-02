@@ -1,10 +1,11 @@
 #pragma once
 #include <iostream>
 #include "MyError.h"
+template <typename T>
 class CDeque
 {
 private:
-	double* array;
+	T* array;
 	int size;
 
 public:
@@ -12,18 +13,18 @@ public:
 		array = nullptr;
 		size = 0;
 	}
-	CDeque(int n, double data) {
+	CDeque(int n, T data) {
 		if (n < 0) throw MyErrorClass("Size cant be < 0!");
 		if (n > 1000) throw Memory();
 		size = n;
-		array = new double[size];
-		for (int i = 0; i < size; i++) array[i] = data+i;
+		array = new T[size];
+		for (int i = 0; i < size; i++) array[i] = data;
 	}
 
 	CDeque(const CDeque& other) { //конструктор копіювання
 		size = other.size;
 
-		array = new double[other.size];
+		array = new T[other.size];
 		for (int i = 0; i < other.size; i++) {
 			array[i] = other.array[i];
 		}
@@ -39,31 +40,200 @@ public:
 		size = 0;
 	}
 
-	CDeque& operator=(const CDeque& other); //оператор прирівнювання
-	CDeque& operator=(CDeque&& other) noexcept; //оператор переміщення
+	CDeque& operator=(const CDeque& other) {
+		if (this != &other) {
+			delete[] array;
+			size = other.size;
+			array = new T[size];
+			for (int i = 0; i < other.size; i++) {
+				array[i] = other.array[i];
+			}
+		}
+		return *this;
+	} //оператор прирівнювання
 
+	CDeque& operator=(CDeque&& other) noexcept {
+		if (this != &other)
+		{
+			delete[] array;
+			array = other.array;
+			size = other.size;
+			other.array = nullptr;
+			other.size = 0;
+		}
+		return *this;
+	} //оператор переміщення
 
-	void addLeft(double data); //додати число зліва
-	void addRight(double data); //додати число справа
+	void addLeft(T data) {
+		try {
+			T* newArr = new T[size + 1];
+			newArr[0] = data;
+			for (int i = 0; i < size; i++) {
+				newArr[i + 1] = array[i];
+			}
 
+			delete[] array;
+			array = newArr;
 
-	void deleteLeft(); //видалити число зліва
-	void deleteRight(); //видалити число справа
+			size++;
+		}
+		catch (const std::bad_alloc) {
+			throw Memory();
+		}
+	} //додати число зліва
 
+	void addRight(T data) {
+		try {
+			T* newArr = new T[size + 1];
+			for (int i = 0; i < size; i++) {
+				newArr[i] = array[i];
+			}
+			newArr[size] = data;
 
-	int getSize() const noexcept; //розмір
-	double getAvg(); // сер. значення
-	void clearAll() noexcept; //очистити чергу
-	bool isEmpty() const noexcept; //чи пуста черга
+			delete[] array;
+			array = newArr;
 
+			size++;
+		}
+		catch (std::bad_alloc) {
+			throw Memory();
+		}
+	} //додати число справа
+
+	void deleteLeft() {
+		if (isEmpty()) throw Empty("Error with deleting element from left!");
+		T* newArr = new T[size - 1];
+		for (int i = 1; i < size; i++) {
+			newArr[i - 1] = array[i];
+		}
+		delete[] array;
+		array = newArr;
+		size--;
+	} //видалити число зліва
+
+	void deleteRight() {
+		if (isEmpty()) throw Empty("Error with deleting element from right!");
+		T* newArray = new T[size - 1];
+		for (int i = 0; i < size - 1; i++) {
+			newArray[i] = array[i];
+		}
+		delete[] array;
+		array = newArray;
+		size--;
+	} //видалити число справа
+
+	int getSize() const noexcept {
+		return size;
+	} //розмір
+
+	T getAvg() {
+		if (isEmpty()) throw Avg();
+		T sum = 0;
+		for (int i = 0; i < size; i++) sum += array[i];
+		return (T)(sum) / size;
+	} // сер. значення
+
+	void clearAll() noexcept {
+		delete[] array;
+		array = nullptr;
+		size = 0;
+		std::cout << "Clear Success!" << std::endl;
+	} //очистити чергу
+
+	bool isEmpty() const noexcept {
+		return size == 0;
+	}
 
 	//оператори перевантаження + - *
-	CDeque operator+(const CDeque& other) const;
-	CDeque operator-(const CDeque& other) const;
-	CDeque operator*(double scalar) const;
+	CDeque operator+(const CDeque& other) const
+	{
+		if (size != other.size) throw Size();
+		CDeque res;
+		res.size = other.size;
+		res.array = new T[res.size];
+		for (int i = 0; i < other.size; i++) {
+			res.array[i] = array[i] + other.array[i];
+		}
+		return res;
+	}
+
+	CDeque operator-(const CDeque& other) const
+	{
+		if (size != other.size) throw Size();
+
+		CDeque res;
+		res.size = other.size;
+		res.array = new T[other.size];
+		for (int i = 0; i < other.size; i++) {
+			res.array[i] = array[i] - other.array[i];
+		}
+		return res;
+	}
+
+	CDeque operator*(T scalar) const
+	{
+		CDeque res;
+		res.size = size;
+		res.array = new T[res.size];
+
+		for (int i = 0; i < res.size; i++) {
+			res.array[i] = array[i] * scalar;
+		}
+		return res;
+	}
+
+	bool operator==(const CDeque& other) const{
+		if (this->size != other.size) return false;
+		for (int i = 0; i < other.size; i++) {
+			if (array[i] != other.array[i]) return false;
+		}
+		return true;
+	}
 
 	//Ввід вивід
-	friend std::istream& operator>>(std::istream& in, CDeque& cl);
-	friend std::ostream& operator<<(std::ostream& out, const CDeque& cl);
+	friend std::istream& operator>>(std::istream& in, CDeque& cl)
+	{
+		std::cout << "Enter Size: ";
+		int tmp_s;
+		if (!(in >> tmp_s)) throw InOuErr();
+		if (tmp_s < 0) throw MyErrorClass("Size cant be < 0!");
+
+		T* tmp_arr = nullptr;
+		if (tmp_s > 0) {
+			try { tmp_arr = new T[tmp_s]; }
+			catch (const std::bad_alloc&) { throw Memory(); }
+		}
+
+		for (int i = 0; i < tmp_s; i++) {
+			if (!(in >> tmp_arr[i])) {
+				delete[] tmp_arr;
+				throw InOuErr();
+			}
+		}
+		delete[] cl.array;
+		cl.array = tmp_arr;
+		cl.size = tmp_s;
+		return in;
+	}
+
+	friend std::ostream& operator<<(std::ostream& out, const CDeque& cl)
+	{
+		if (!out) throw InOuErr();
+		if (cl.isEmpty()) {
+			out << "Queue is empty";
+			return out;
+		}
+		for (int i = 0; i < cl.size; i++) {
+			out << cl.array[i] << " ";
+		}
+		return out;
+	}
 };
 
+template<typename T> 
+int FindElementInArray(T* array, int size, T element) {
+	for (int i = 0; i < size; i++) {
+		if (array[i] == element) return i;
+	}
+	return size;
+}

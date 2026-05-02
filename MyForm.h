@@ -5,6 +5,7 @@
 #include <msclr/marshal_cppstd.h>
 
 #include "CDeque.h"
+#include "CPolynom3.h"
 #include "MyError.h"
 
 namespace ooplab9prog {
@@ -25,7 +26,7 @@ namespace ooplab9prog {
 		MyForm(void)
 		{
 			InitializeComponent();
-			myDeque = new CDeque;
+			
 		}
 			
 
@@ -69,7 +70,9 @@ namespace ooplab9prog {
 
 
 	private:
-		CDeque* myDeque;
+		CDeque<bool>* dequeBool;
+		CDeque<float>* dequeFloat;
+		CDeque<CPolynom3>* dequePolynom3;
 		double value;
 		int choise = 0;
 	private: System::Windows::Forms::Label^ ResultLabel;
@@ -207,7 +210,7 @@ namespace ooplab9prog {
 #pragma endregion
 	private: System::Void AddLeftButton_Click(System::Object^ sender, System::EventArgs^ e) {
 		try {
-			value = Convert::ToDouble(EnterTextTextBox->Text);
+			value = Convert::ToT(EnterTextTextBox->Text);
 			myDeque->addLeft(value);
 			EnterTextTextBox->Clear();
 			UpdateDeque();
@@ -218,7 +221,7 @@ namespace ooplab9prog {
 private: System::Void label1_Click(System::Object^ sender, System::EventArgs^ e) {}
 private: System::Void AddRightButton_Click(System::Object^ sender, System::EventArgs^ e) {
 	try {
-		value = Convert::ToDouble(EnterTextTextBox->Text);
+		value = Convert::ToT(EnterTextTextBox->Text);
 		myDeque->addRight(value);
 		EnterTextTextBox->Clear();
 		UpdateDeque();
@@ -240,7 +243,7 @@ private: System::Void GetResultButton_Click(System::Object^ sender, System::Even
 	case 1: //Avg
 	{
 		try {
-			double avg = myDeque->getAvg();
+			T avg = myDeque->getAvg();
 			MessageBox::Show("Avg is " + avg.ToString(), "Result", MessageBoxButtons::OK, MessageBoxIcon::Asterisk);
 			ErrorLabel->Text = "";
 		}
