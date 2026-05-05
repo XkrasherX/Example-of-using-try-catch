@@ -69,7 +69,7 @@ CPolynom3 CPolynom3::operator-(const CPolynom3& otherClass) const{
 	res.c = c - otherClass.c;
 	return res;
 }
-CPolynom3 CPolynom3::operator*(int scalar) {
+CPolynom3 CPolynom3::operator*(int scalar) const{
 
 	CPolynom3 res;
 	res.a = a * scalar;
@@ -92,7 +92,7 @@ bool CPolynom3::operator==(const CPolynom3& other) const {
 
 std::ostream& operator<<(std::ostream& out, const CPolynom3& p)
 {
-	out << p.GetA() << " " << p.GetB() << " " << p.GetC() << " \n";
+	out << p.GetA() << " " << p.GetB() << " " << p.GetC();
 	return out;
 }
 

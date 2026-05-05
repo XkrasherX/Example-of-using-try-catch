@@ -1,7 +1,7 @@
 #ifndef CPOLYNOM3_H
 #define CPOLYNOM3_H
 #include <iostream>
-
+#include <cmath>
 class CPolynom3 {
 
 	int a;
@@ -48,7 +48,7 @@ public:
 	CPolynom3 operator-(const CPolynom3& otherClass) const;
 
 	bool operator==(const CPolynom3& other) const;
-	CPolynom3 operator*(int scalar);
+	CPolynom3 operator*(int scalar) const;
 	CPolynom3 operator-();
 
 	friend std::ostream& operator<<(std::ostream& out, const CPolynom3& p);

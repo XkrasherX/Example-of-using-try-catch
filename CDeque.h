@@ -65,8 +65,9 @@ public:
 	} //оператор переміщення
 
 	void addLeft(T data) {
+		T* newArr = nullptr;
 		try {
-			T* newArr = new T[size + 1];
+			newArr = new T[size + 1];
 			newArr[0] = data;
 			for (int i = 0; i < size; i++) {
 				newArr[i + 1] = array[i];
@@ -77,14 +78,15 @@ public:
 
 			size++;
 		}
-		catch (const std::bad_alloc) {
+		catch (const std::bad_alloc&) {
 			throw Memory();
 		}
 	} //додати число зліва
 
 	void addRight(T data) {
+		T* newArr = nullptr;
 		try {
-			T* newArr = new T[size + 1];
+			newArr = new T[size + 1];
 			for (int i = 0; i < size; i++) {
 				newArr[i] = array[i];
 			}
@@ -95,13 +97,21 @@ public:
 
 			size++;
 		}
-		catch (std::bad_alloc) {
+		catch (std::bad_alloc&) {
 			throw Memory();
 		}
 	} //додати число справа
 
 	void deleteLeft() {
 		if (isEmpty()) throw Empty("Error with deleting element from left!");
+		
+		if (size == 1) {
+			delete[] array;
+			array = nullptr;
+			size = 0;
+			return;
+		}
+
 		T* newArr = new T[size - 1];
 		for (int i = 1; i < size; i++) {
 			newArr[i - 1] = array[i];
@@ -113,6 +123,14 @@ public:
 
 	void deleteRight() {
 		if (isEmpty()) throw Empty("Error with deleting element from right!");
+		
+		if (size == 1) {
+			delete[] array;
+			array = nullptr;
+			size = 0;
+			return;
+		}
+
 		T* newArray = new T[size - 1];
 		for (int i = 0; i < size - 1; i++) {
 			newArray[i] = array[i];
@@ -126,12 +144,9 @@ public:
 		return size;
 	} //розмір
 
-	T getAvg() {
-		if (isEmpty()) throw Avg();
-		T sum = 0;
-		for (int i = 0; i < size; i++) sum += array[i];
-		return (T)(sum) / size;
-	} // сер. значення
+	T* getArray() const noexcept {
+		return array;
+	}
 
 	void clearAll() noexcept {
 		delete[] array;
@@ -170,7 +185,7 @@ public:
 		return res;
 	}
 
-	CDeque operator*(T scalar) const
+	CDeque operator*(int scalar) const
 	{
 		CDeque res;
 		res.size = size;
@@ -185,7 +200,7 @@ public:
 	bool operator==(const CDeque& other) const{
 		if (this->size != other.size) return false;
 		for (int i = 0; i < other.size; i++) {
-			if (array[i] != other.array[i]) return false;
+			if (!(array[i] == other.array[i])) return false;
 		}
 		return true;
 	}
@@ -193,26 +208,13 @@ public:
 	//Ввід вивід
 	friend std::istream& operator>>(std::istream& in, CDeque& cl)
 	{
-		std::cout << "Enter Size: ";
-		int tmp_s;
-		if (!(in >> tmp_s)) throw InOuErr();
-		if (tmp_s < 0) throw MyErrorClass("Size cant be < 0!");
-
-		T* tmp_arr = nullptr;
-		if (tmp_s > 0) {
-			try { tmp_arr = new T[tmp_s]; }
-			catch (const std::bad_alloc&) { throw Memory(); }
+		T value;
+		
+		while (in >> value) {
+			cl.addRight(value);
 		}
-
-		for (int i = 0; i < tmp_s; i++) {
-			if (!(in >> tmp_arr[i])) {
-				delete[] tmp_arr;
-				throw InOuErr();
-			}
-		}
-		delete[] cl.array;
-		cl.array = tmp_arr;
-		cl.size = tmp_s;
+		
+		in.clear();
 		return in;
 	}
 
@@ -226,6 +228,7 @@ public:
 		for (int i = 0; i < cl.size; i++) {
 			out << cl.array[i] << " ";
 		}
+		out << std::endl;
 		return out;
 	}
 };
