@@ -1,33 +1,21 @@
 #pragma once
 #include <iostream>
+#include<deque>
 #include "MyError.h"
 template <typename T>
 class CDeque
 {
 private:
-	T* array;
-	int size;
+	std::deque<T> array;
 
 public:
 	CDeque() noexcept{
 		array = nullptr;
-		size = 0;
 	}
-	CDeque(int n, T data) {
-		if (n < 0) throw MyErrorClass("Size cant be < 0!");
-		if (n > 1000) throw Memory();
-		size = n;
-		array = new T[size];
-		for (int i = 0; i < size; i++) array[i] = data;
-	}
+	CDeque(T data) { array.push_back(i); }
 
 	CDeque(const CDeque& other) { //конструктор копіювання
-		size = other.size;
-
-		array = new T[other.size];
-		for (int i = 0; i < other.size; i++) {
-			array[i] = other.array[i];
-		}
+		std::copy(array.begin(), array.end(), other.array);
 	}
 	CDeque(CDeque&& other) noexcept { //конструктор переміщення
 		array = other.array;
