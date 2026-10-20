@@ -113,15 +113,13 @@ The `CDeque` class manages a dynamic array and its current size. It includes:
 1. Clone your repository:
 
    ```bash
-   git clone https://github.com/USERNAME/REPOSITORY.git
+   git clone https://github.com/XkrasherX/Example-of-using-try-catch.git
    ```
 
 2. Open the solution (`.sln`) in **Visual Studio**.
 3. Ensure that the project is configured for **C++/CLI** and Windows Forms.
 4. Build the solution and run the application.
 5. Enter values, add elements to the deque, and select operations from the dropdown.
-
-> Replace `USERNAME/REPOSITORY` with the actual path to your GitHub repository.
 
 ---
 
